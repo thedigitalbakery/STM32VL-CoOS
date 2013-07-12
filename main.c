@@ -3,6 +3,7 @@
 #include "stm32f10x_rcc.h"
 #include <CoOS.h>                                            /*!< CoOS header file */
 #include "trend_func_lib.h"
+#include "trend_logic_lib.h"
 
 #define STACK_SIZE_DEFAULT 128								/*! Same as MCU flash size*/
 
@@ -33,6 +34,7 @@ void initializeBoard(){
 /*Global Variables*/
 static int ledval = 0; //Global LED integer
 double s1R;
+int outputNo1;
 
 /*RTOS Task 1*/
 /*Flashes the two LED's in an alternating pattern*/
@@ -41,7 +43,7 @@ void task1 (void* pdata){
         		GPIO_WriteBit(GPIOC, GPIO_Pin_8, (ledval) ? Bit_SET : Bit_RESET);
         		ledval = 1 - ledval;
         		GPIO_WriteBit(GPIOC, GPIO_Pin_9, (ledval) ? Bit_SET : Bit_RESET);
-                CoTimeDelay(0,0,5,0); //Each LED turns on for 3 seconds
+                CoTimeDelay(0,0,0,500); //Each LED turns on for the time variable specified.
         		}
 }
 
@@ -49,8 +51,16 @@ void task1 (void* pdata){
 void task2 (void* pdata){
         while(1){
         		//mystep1();
+        		int c1e = 0;
+        		int c1f = 1;
+        		int c1g = 0;
+        		int c1h = 1;
+        		int logicInputC1[4] = {c1e,c1f,c1g,c1h};
+        		int logicTestC1[4][4] = {{1,0,0,1}, {1,0,1,1}, {0,1,0,0}, {0,1,0,1}};
+        		outputNo1 = comb(logicInputC1,logicTestC1);
+        		//CoTickDelay(10);
         		//mystep2();
-        		}
+        }
 }
 
 /*Main Program Loop*/
